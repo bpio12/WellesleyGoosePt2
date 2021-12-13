@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, TouchableOpacity,Alert} from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { initializeApp } from "firebase/app";
 import * as ImagePicker from 'expo-image-picker';
-import * as firebase from 'firebase';
 import { // access to authentication features:
          getAuth, 
          // for email/password authentication: 
@@ -33,7 +32,6 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp); 
-const bucket = firebase.app().storage('gs://goose-51fe9.appspot.com');
 let options = {
   title: 'Select Image',
   customButtons: [
@@ -52,13 +50,12 @@ let options = {
 
 
 export default class App extends Component {
- 
   constructor(props) {
     super(props);
     this.state = {
       pickedImagePath:'',
     };
-  } 
+  }
  
 
   // This function is triggered when the "Select an image" button pressed
@@ -81,12 +78,7 @@ export default class App extends Component {
       console.log(result.uri);
     }
   }
-  uploadImage = async(uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    var ref = firebaseApp.storage().ref().child("my-image");
-    return ref.put(blob);
-  }
+
   // This function is triggered when the "Open camera" button pressed
    async openCamera (){
     // Ask the user for the permission to access the camera
@@ -106,17 +98,12 @@ export default class App extends Component {
       
       this.setState({pickedImagePath: result.uri});
       console.log(result.uri);
-      this.uploadImage();
     }
   }
-
-  
 
 
 
 render (){
-
-  const reference = bucket.ref('goose')
   return (
     <View style={styles.container}>
     <View style={styles.navBar}>
